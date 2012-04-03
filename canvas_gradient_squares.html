@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Canvas tutorial</title>
+    <script type="text/javascript">
+	function draw() {
+
+		var sc = 1;
+		for (var rd=0; rd < 4; rd++)
+			for (var gd=0; gd < 4; gd++)
+				for (var bd=0; bd < 4; bd++)
+					if (!( (rd<=1 && gd<=1 && bd<=1) || (rd>=2 && gd>=2 && bd>=2) )) // Skip combinations affected only by x-axis or only by y-axis
+						drawSquare('sq'+sc++, rd, gd, bd);
+
+	}
+
+	function drawSquare(id, rd, gd, bd) {
+
+console.log('Drawing square: ', id, rd, gd, bd);
+
+
+		var canvasWrapper = document.getElementById('canvasWrapper');
+		var canvas = document.createElement('canvas');
+		canvas.setAttribute('width', 256);
+		canvas.setAttribute('height', 256);
+		canvasWrapper.appendChild(canvas);
+
+
+
+		var ctx = canvas.getContext('2d');
+
+		var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+		var w = imageData.width;
+		var h = imageData.height;
+		var d = imageData.data;
+		var c = 0;
+
+		var x={}, ix={}, y={}, iy={};
+
+		var idx = [x, ix, y, iy];
+
+		var r = idx[rd];
+		var g = idx[gd];
+		var b = idx[bd];
+
+		for (y.v=0, iy.v=h-1; iy.v >= 0; y.v++, iy.v--) {
+			for (x.v=0, ix.v=w-1; ix.v >= 0; x.v++, ix.v--) {
+				d[c++] = r.v;
+				d[c++] = g.v;
+				d[c++] = b.v;
+				d[c++] = 255;
+			}
+		}
+
+		ctx.putImageData(imageData, 0, 0);
+	}
+    </script>
+    <style type="text/css">
+      #canvasWrapper {
+      	font-size: 0px;
+      	line-height: 0px;
+      }
+    </style>
+  </head>
+  <body onload="draw();">
+      <div id="canvasWrapper"></div>
+  </body>
+</html>
